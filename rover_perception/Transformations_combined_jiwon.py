@@ -21,12 +21,14 @@ from rover_utils.constants import *
 tag_pose_castor = None
 tag_pose_CRABBER = None
 listener = None
+tag_pose_CRABBER_intel = None
 
 CASTOR_ORIGINAL_TAG = "/tag_8"
 CRABBER_ORIGINAL_TAG = "/tag_0"
 
 CASTOR_TAG    = "faster_tag_8"
 CRABBER_TAG   = "faster_tag_0"
+CRABBER_TAG_intel = "faster_tag_0_intel"
  
 
 CASTOR_ROVER = "/bag/rover"
@@ -101,9 +103,8 @@ def get_crabber_tf_thread():
         ros_rate.sleep()
 
 if __name__ == '__main__':
-
-    # global pub
-    # global tag_pose_castor, tag_pose_CRABBER
+    global tag_pose_CRABBER_intel
+    global tag_pose_CRABBER
 
     rospy.init_node('tf_broadcaster_combined')
 
@@ -119,6 +120,11 @@ if __name__ == '__main__':
     t2 = threading.Thread(target=get_crabber_tf_thread)
     t2.start()
 
+    print "Get tf only once"
+
+    rate = 15
+    trans_intel, rot_intel = getTransform(FRAME.CAMERA, CRABBER_ORIGINAL_TAG, rate)
+    tag_pose_CRABBER_intel = (trans_intel, rot_intel)
 
     rate = rospy.Rate(30)
     br = tf.TransformBroadcaster()
@@ -191,11 +197,41 @@ if __name__ == '__main__':
                      CRABBER_ROVER,
                      CRABBER_ROVER_ARM)
             
-            br.sendTransform((-0.125674,0.0, 0.0), # Adeded y = 9.6mm
-                        tf.transformations.quaternion_from_euler(math.radians(90), math.radians(0), math.radians(90)),
+            # from tag0 to intel
+            # br.sendTransform((-0.125674,0.0, 0.0),
+            #             tf.transformations.quaternion_from_euler(math.radians(90), math.radians(0), math.radians(90)),
+            #             rospy.Time.now(),
+            #             "/camera_odom_frame",
+            #             CRABBER_TAG)
+
+         # CRABBER_intel
+        if(tag_pose_CRABBER_intel != None):
+
+            br.sendTransform(tag_pose_CRABBER_intel[0],
+                         tag_pose_CRABBER_intel[1],
+                         rospy.Time.now(),
+                         CRABBER_TAG_intel,
+                         FRAME.CAMERA)
+
+
+            # br.sendTransform((0.185, 0.00 , -0.045), #  x =  rounded for 179.69mm from previous value of 0.19m
+            #                  tf.transformations.quaternion_from_euler(cd cat   0.0, 0.0, 0.0),
+            #                  rospy.Time.now(),
+            #                  CRABBER_ROVER_ARM,
+            #                  CRABBER_TAG)
+
+            # br.sendTransform((-0.038, 0.0 , -0.144), # Adeded y = 9.6mm
+            #          tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0),
+            #          rospy.Time.now(),
+            #          CRABBER_ROVER,
+            #          CRABBER_ROVER_ARM)
+            
+            # from tag0 to intel
+            br.sendTransform((-0.125674,0.0, 0.0),
+                        tf.transformations.quaternion_from_euler(math.radians(0), math.radians(00), math.radians(180)),
                         rospy.Time.now(),
                         "/camera_odom_frame",
-                        CRABBER_TAG)
+                        CRABBER_TAG_intel)
 
 
         rate.sleep()
