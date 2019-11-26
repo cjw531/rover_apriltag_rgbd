@@ -1,0 +1,21 @@
+<launch>
+    <!-- include the individual launch files-->
+    
+    <!-- launch the camera -->
+    <!-- include file="$(find kinect2_bridge)/launch/custom_kinect_bridge.launch" /-->
+    <include file="$(find kinect2_bridge)/launch/kinect2_bridge.launch" />
+ 
+    <!-- launch the aprtil tag detector -->
+    <!-- include file="$(find apriltags2_ros)/launch/continuous_detection.launch" /-->    
+
+    <include file="$(find rover_perception)/launch/april_kinect.launch" />
+    <node name="distribute_image" pkg="rover_perception" type="distribute_image.py" output="screen"/>	
+
+    <!-- <node name="tag_position" pkg="rover_perception" type="objectTagPosition.py" output="screen"/--> 
+    
+    <node name="tf_broadcaster_castor" pkg="rover_perception" type="Transformations_combined_jiwon.py" output="screen"/>  
+
+    <!-- launch RVIZ -->
+    <!--node name="rviz" pkg="rviz" type="rviz" required="true" /-->
+    
+</launch>
