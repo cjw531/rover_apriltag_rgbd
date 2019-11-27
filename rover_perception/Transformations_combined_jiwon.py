@@ -40,6 +40,9 @@ CRABBER_ROVER_ARM = "/stone/rover_arm"
 CASTOR_ROVER_REVERSE = "/bag/rover_reverse"
 CASTOR_ONBOARD_CAMERA = "/bag/camera"
 
+prev_tag = [0.0, 0.0, 0.0]
+prev_pose = [0.0, 0.0, 0.0]
+
 def getTransform(from_tf, to_tf, rate):
 
     global listener
@@ -105,9 +108,9 @@ def get_crabber_tf_thread():
 if __name__ == '__main__':
     global tag_pose_CRABBER_intel
     global tag_pose_CRABBER
+    global prev_tag, prev_pose
 
     rospy.init_node('tf_broadcaster_combined')
-
 
     print ("starting...")
     
@@ -196,13 +199,6 @@ if __name__ == '__main__':
                      rospy.Time.now(),
                      CRABBER_ROVER,
                      CRABBER_ROVER_ARM)
-            
-            # from tag0 to intel
-            # br.sendTransform((-0.125674,0.0, 0.0),
-            #             tf.transformations.quaternion_from_euler(math.radians(90), math.radians(0), math.radians(90)),
-            #             rospy.Time.now(),
-            #             "/camera_odom_frame",
-            #             CRABBER_TAG)
 
          # CRABBER_intel
         if(tag_pose_CRABBER_intel != None):
@@ -212,29 +208,39 @@ if __name__ == '__main__':
                          rospy.Time.now(),
                          CRABBER_TAG_intel,
                          FRAME.CAMERA)
-
-
-            # br.sendTransform((0.185, 0.00 , -0.045), #  x =  rounded for 179.69mm from previous value of 0.19m
-            #                  tf.transformations.quaternion_from_euler(cd cat   0.0, 0.0, 0.0),
-            #                  rospy.Time.now(),
-            #                  CRABBER_ROVER_ARM,
-            #                  CRABBER_TAG)
-
-            # br.sendTransform((-0.038, 0.0 , -0.144), # Adeded y = 9.6mm
-            #          tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0),
-            #          rospy.Time.now(),
-            #          CRABBER_ROVER,
-            #          CRABBER_ROVER_ARM)
             
             # from tag0 to intel
             br.sendTransform((-0.125674,0.0, 0.0),
-                        tf.transformations.quaternion_from_euler(math.radians(0), math.radians(00), math.radians(180)),
+                        tf.transformations.quaternion_from_euler(math.radians(0), math.radians(0), math.radians(180)),
                         rospy.Time.now(),
                         "/camera_odom_frame",
                         CRABBER_TAG_intel)
 
+        # Listener for txt
+        try:
+            (trans_odom_to_tag, rot_odom_to_tag) = listener.lookupTransform('/camera_odom_frame', CRABBER_TAG, rospy.Time(0))
+            (trans_odom_to_pose, rot_odom_to_pose) = listener.lookupTransform('/camera_odom_frame', "/camera_pose_frame", rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            print "Error - Transformation"
+            rospy.sleep(0.1)
+            continue
+        
+        trans_odom_to_tag = [trans_odom_to_tag[0] + 0.125674, trans_odom_to_tag[1], trans_odom_to_tag[2]]
+        round_tag = [round(e, 1) for e in trans_odom_to_tag]
+        if (prev_tag != round_tag):
+            print "----------"
+            print "Odom to TAG:"
+            print(rospy.Time.now(), round_tag)
+            prev_tag = round_tag
+
+        round_pose = [round(e, 1) for e in trans_odom_to_pose]
+        if (prev_pose != round_pose):
+            print "++++++++++"
+            print "Odom to Pose:"
+            print(rospy.Time.now(), round_pose)
+            prev_pose = round_pose
+        
 
         rate.sleep()
-
 
     rospy.spin()
