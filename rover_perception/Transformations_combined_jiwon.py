@@ -162,24 +162,9 @@ if __name__ == '__main__':
                         CASTOR_ROVER,
                         CASTOR_ROVER_ARM)
 
-            br.sendTransform((-0.05965, 0.000 , -0.05379), # Adeded y = 9.6mm
-                        tf.transformations.quaternion_from_euler(math.radians(90), math.radians(0), math.radians(90)),
-                        rospy.Time.now(),
-                        CASTOR_ONBOARD_CAMERA,
-                        CASTOR_TAG)
-            
-            br.sendTransform((0.009, -0.141, 0.221), # Adeded y = 9.6mm
-                        tf.transformations.quaternion_from_euler(math.radians(-90), math.radians(-90), math.radians(0)),
-                        rospy.Time.now(),
-                        "/bag/rover_from_camera",
-                        CASTOR_ONBOARD_CAMERA)
-
 
         # CRABBER
         if(tag_pose_CRABBER != None):
-
-            # print "CRABBER Tag TF: ", tag_pose_CRABBER
-
 
             br.sendTransform(tag_pose_CRABBER[0],
                          tag_pose_CRABBER[1],
@@ -227,18 +212,17 @@ if __name__ == '__main__':
         
         trans_odom_to_tag = [trans_odom_to_tag[0] + 0.125674, trans_odom_to_tag[1], trans_odom_to_tag[2]]
         round_tag = [round(e, 1) for e in trans_odom_to_tag]
-        if (prev_tag != round_tag):
-            print "----------"
-            print "Odom to TAG:"
-            print(rospy.Time.now(), round_tag)
-            prev_tag = round_tag
-
         round_pose = [round(e, 1) for e in trans_odom_to_pose]
-        if (prev_pose != round_pose):
-            print "++++++++++"
+        if (prev_tag != round_tag or prev_pose != round_pose):
+            print "----------"
+            print(rospy.Time.now())
+            print "Odom to TAG:"
+            print(trans_odom_to_tag)
+            prev_tag = round_tag
             print "Odom to Pose:"
-            print(rospy.Time.now(), round_pose)
+            print(trans_odom_to_pose)
             prev_pose = round_pose
+            print "----------"
         
 
         rate.sleep()
