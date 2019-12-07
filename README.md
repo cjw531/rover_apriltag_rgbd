@@ -25,7 +25,7 @@ The location differences between april tag and Intel Tracking camera will be che
 │   └── system overview.png
 ├── img ...contains screenshots from rviz and rqt
 │   └── /*.png
-├── rover_perception ...contains source code for implementations
+├── rover_perception ...contains code for implementations
 │   ├── default.rviz
 │   ├── demoKinect_transform_rviz_castor_puffer_intel_jiwon.launch
 │   └── Transformations_combined_jiwon.py
