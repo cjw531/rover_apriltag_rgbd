@@ -15,7 +15,7 @@ The location differences between april tag and Intel Tracking camera will be che
 ├── analysis ...contains plots
 │   ├── Analysis.ipynb
 │   └── /*.csv
-├── data ...contains raw coordinate data and robot's movement
+├── data ...contains raw coordinate data and video of movement
 │   ├── /*.txt
 │   ├── /*.mp4
 |   └── /*.gif
