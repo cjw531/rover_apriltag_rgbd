@@ -18,17 +18,17 @@ The location differences between april tag and Intel Tracking camera will be che
 ├── data ...contains raw coordinate data and video of movement
 │   ├── /*.txt
 │   ├── /*.mp4
-|   └── /*.gif
+│   └── /*.gif
 ├── document ...contains documents and diagrams for the course
 │   ├── CSE468_Demo.pptx
 │   ├── Design Document.docx
-|   └── system overview.png
+│   └── system overview.png
 ├── img ...contains screenshots from rviz and rqt
 │   └── /*.png
 ├── rover_perception ...contains source code for implementations
 │   ├── default.rviz
 │   ├── demoKinect_transform_rviz_castor_puffer_intel_jiwon.launch
-|   └── Transformations_combined_jiwon.py
+│   └── Transformations_combined_jiwon.py
 ├── README.md
 └── .gitignore
 ```
