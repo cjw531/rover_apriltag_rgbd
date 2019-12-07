@@ -10,6 +10,29 @@ The location differences between april tag and Intel Tracking camera will be che
 #### 4. Run rviz on turanga
 #### 5. Run teleop_twist_keyboard.py to control the movement of the robot on anywhere
 
+## Directory Structure
+```bash
+├── analysis ...contains plots
+│   ├── Analysis.ipynb
+│   └── /*.csv
+├── data ...contains raw coordinate data and robot's movement
+│   ├── /*.txt
+│   ├── /*.mp4
+|   └── /*.gif
+├── document ...contains documents and diagrams for the course
+│   ├── CSE468_Demo.pptx
+│   ├── Design Document.docx
+|   └── system overview.png
+├── img ...contains screenshots from rviz and rqt
+│   └── /*.png
+├── rover_perception ...contains source code for implementations
+│   ├── default.rviz
+│   ├── demoKinect_transform_rviz_castor_puffer_intel_jiwon.launch
+|   └── Transformations_combined_jiwon.py
+├── README.md
+└── .gitignore
+```
+
 ## References
 ### Modules:
 1.	https://github.com/IntelRealSense/realsense-ros
